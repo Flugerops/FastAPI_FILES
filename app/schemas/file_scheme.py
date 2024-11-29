@@ -12,7 +12,7 @@ class FileScheme(BaseModel):
 
     @field_validator("files")
     @classmethod
-    async def checksize_ext(cls, files: UploadFile):
+    async def checksize_ext(cls, files: List[UploadFile]):
         for file in files:
             if (
                 not any(

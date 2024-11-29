@@ -1,4 +1,5 @@
 import aiohttp
+import aiofiles
 
 from ..settings import VT_KEY
 
@@ -10,7 +11,7 @@ async def virus_check(file_path: str) -> dict:
         "x-apikey": VT_KEY,
     }
     async with aiohttp.ClientSession() as session:
-        with open(file_path, "rb") as file:
+        async with aiofiles.open(file_path, "rb") as file:
             async with session.post(
                 url, data={"file": file}, headers=headers
             ) as response:
