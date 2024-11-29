@@ -1,6 +1,6 @@
 import aiohttp
 
-from .. import VT_KEY
+from ..settings import VT_KEY
 
 
 async def virus_check(file_path: str) -> dict:

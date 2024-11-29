@@ -4,7 +4,7 @@ import os
 from fastapi import UploadFile, HTTPException
 import aiofiles
 
-from .. import TMP_FOLDER
+from ..settings import TMP_FOLDER
 from .antivirus import virus_check
 
 
