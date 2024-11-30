@@ -20,4 +20,4 @@ async def virus_check(file_path: str) -> dict:
                     f"https://www.virustotal.com/api/v3/analyses/{analyse_id.get("id")}"
                 )
             async with session.get(result_url, headers=headers):
-                return response.json()
+                return await response.json()

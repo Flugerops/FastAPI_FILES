@@ -8,13 +8,14 @@ from ..settings import TMP_FOLDER
 from .antivirus import virus_check
 
 
-async def process_file(file: UploadFile):
-    file_location = os.path.join(TMP_FOLDER, file.filename)
+async def process_file(filename: str, content: bytes):
+    file_location = os.path.join(TMP_FOLDER, filename)
     async with aiofiles.open(file_location, "wb") as out_file:
-        content = await file.read()
         await out_file.write(content)
 
     virus_result = await virus_check(file_location)
+    if virus_result:
+        print(virus_result)
 
     # if virus_result:
     #     print(virus_result)
