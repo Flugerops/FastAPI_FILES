@@ -4,25 +4,27 @@ import os
 from fastapi import UploadFile, HTTPException
 import aiofiles
 
-from ..settings import TMP_FOLDER
+from ..settings import TMP_FOLDER, FILES_FOLDER
 from .antivirus import virus_check
+from ..logging import logger
+from .image import save_file, optimize_image
 
 
 async def process_file(filename: str, content: bytes):
-    file_location = os.path.join(TMP_FOLDER, filename)
-    async with aiofiles.open(file_location, "wb") as out_file:
-        await out_file.write(content)
+    logger.info(f"Checking for viruses in: {filename}")
+    virus_result = await virus_check(filename, content)
 
-    virus_result = await virus_check(file_location)
     if virus_result:
-        print(virus_result)
+        logger.info(f"Virus check result for {filename}: {virus_result}")
+        logger.info(f"Virus file path {filename}")
+        if virus_result > 0:
 
-    # if virus_result:
-    #     print(virus_result)
-    # os.remove(file_location)
-    # raise HTTPException(
-    #     status_code=400, detail=f"File contains a virus: {file.filename}"
-    # )
+            raise HTTPException(
+                status_code=400, detail=f"File contains a virus: {filename}"
+            )
 
-    # await optimize_image(file_path)
-    # await move_file_to_uploads(file_path)
+    logger.info("File doesn`t contains virus")
+    file_location = os.path.join(FILES_FOLDER, filename)
+
+    await save_file(file_location, content)
+    await optimize_image(file_location)

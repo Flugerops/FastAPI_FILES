@@ -4,6 +4,7 @@ from fastapi import APIRouter, UploadFile, BackgroundTasks, HTTPException
 
 from ..utils import process_file
 from ..settings import ALLOWED_EXTENSIONS, ALLOWED_MIME, MAX_FILE_SIZE
+from ..logging import logger
 
 
 files_router = APIRouter(prefix="/file")
@@ -24,4 +25,5 @@ async def upload_files(files: List[UploadFile], background_tasks: BackgroundTask
         content = await file.read()
         background_tasks.add_task(process_file, file.filename, content)
 
+    logger.info("Files are being uploaded.")
     return {"message": "Files are being uploaded."}
