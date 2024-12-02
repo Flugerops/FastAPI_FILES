@@ -21,7 +21,7 @@ async def test_upload_files_success():
         with open(test_file_path, "rb") as buffer:
             response = await ac.post(
                 "/file/upload/",
-                files={"files": ("test_image.jpg", buffer, "image/jpeg")},
+                files={"files": (test_file_path, buffer, "image/jpeg")},
             )
 
     assert response.status_code == 200
@@ -41,7 +41,7 @@ async def test_upload_files_unsupported_format():
         with open(test_file_path, "rb") as buffer:
             response = await ac.post(
                 "/file/upload/",
-                files={"files": ("test_file.txt", buffer)},
+                files={"files": (test_file_path, buffer)},
             )
     assert response.status_code == 400
 
@@ -60,7 +60,7 @@ async def test_upload_files_exceeds_size():
         with open(test_file_path, "rb") as buffer:
             response = await ac.post(
                 "/file/upload/",
-                files={"files": ("large_file.jpg", buffer, "image/jpeg")},
+                files={"files": (test_file_path, buffer, "image/jpeg")},
             )
 
     assert response.status_code == 400
